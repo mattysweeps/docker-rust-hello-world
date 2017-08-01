@@ -12,7 +12,8 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 script:
   - ls -alh .
-  - pwd
+  - whoami
+  - docker run alpine whoami
   - docker run --rm -it -v $(pwd):/home/rust/src ekidd/rust-musl-builder cargo build --release --verbose
 after_script:
   - docker build --tag docker-rust-hello-world:${TRAVIS_JOB_NUMBER} .
