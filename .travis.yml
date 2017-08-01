@@ -14,6 +14,7 @@ script:
   - ls -alh .
   - whoami
   - docker run alpine whoami
+  - chown 777 .
   - docker run --rm -it -v $(pwd):/home/rust/src ekidd/rust-musl-builder cargo build --release --verbose
 after_script:
   - docker build --tag docker-rust-hello-world:${TRAVIS_JOB_NUMBER} .
