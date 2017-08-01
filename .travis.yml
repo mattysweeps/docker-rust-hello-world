@@ -11,7 +11,8 @@ env:
     - secure: L1D/EydcJAIcyaiVVzSglSXBN5kwptvh/UeBdjc/K/WTuitTaXLmwkhF0gm76udeQKmtL0KTtCUIVpE+jrVswYUkACJjGQgDAclXRQ+X+LjdiBJBuDSYBd4NC/xEtCH0mMEtPBpfOR0ZXlpfOPy8T++wzXeGv9ogk1bk8I2BaPXKw7R2BMaLK3m+7H75G/hneXndlzQ1qSzlwdnsNGQ8LxuoxAUomgBZSDlKMA8KubJFAVaY8Lxaw9qwWypDXiF08Lk+L9rkS+N9YRgKVkbYJbCDqY5P8ezh+zDmlGsJm91T3/aXFB0wTYabf4aBDpPoy0Yvriy+cL7IZOOqTy2/q59Rsee2aPxjB5UOA4GUM7zg1XecFYok9oix5u6XJk/LbhQJC329DY6hk/nba18dhVHPUSK2uyzbZ3U2/WtC1DBe1RO5TCYjAT56ytQFUIPZi+AVmN2OQb9SJAioCV6zeREzcv6m1yWtaKsvyF5iTMQvMk6EaSGcp54IclbVhSSaLKdWNvS1r0RAnaBBizjXLy97Knfdq2OIhEPOUenUMdll8UPGoLPcnChpZvw8cNm0hNXiDqKwLm8sJVvTQJWx2sNkRA8YIo6QITF5iU1ZPh3xAZPAq6LwGoYs1fd0fhuciHwregaPAXj4o4+mhHtRCwNOIZ4a9l4SzxGOMtqv0KA=
     - COMMIT=${TRAVIS_COMMIT::8}
 script:
-  - docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder cargo build --release --verbose
+  - ls -alh /home/rust/src
+  - docker run --rm -it -v $(pwd):/home/rust/src ekidd/rust-musl-builder cargo build --release --verbose
 after_script:
   - docker build --tag docker-rust-hello-world:${TRAVIS_JOB_NUMBER} .
 after_success:
