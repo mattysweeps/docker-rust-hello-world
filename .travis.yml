@@ -1,0 +1,23 @@
+language: rust
+rust:
+  - stable
+services:
+  - docker
+env:
+  global:
+    - secure: UpSdK/8KX2vVW8HiKY2TQj7FIcb1Tm9pj4YY1rWykoscR7lqtW7K+x9UPIIzdUZyc+jp/GwavTfk1YG2CmufnfJdnJtQ8WFgsWjk1Folp7e0QIERhKU8wpIKeh3KJ9MgJIAPkAlCNJlnYnDsh5ex07/cTWhIpfHxthXCNu5CWcGoH3mpAL53hRO/EKKC4otcczQRhvGSPEX/xUBvMsNdYfFgMylSWSRTZwKlKD/o9By75P/D1oE+2YRC/MNQ8NwpIN6eFp9D6WTl6ANd8y4YJy2x98g5V8OYAArp6qV0bozrB3/sP7pkk0z8XM1iAmfZG7z+oDFX4p9OFaefmK4KT5I5LHWwT86pu6GdPQd3alvqcf+v63/b0XZIfyFak+wW2cm8U/RKGsSHWA5E7XnneCa8ZZg9J05AbEuIFvefZa+UeMS8xQ0KNRqYEuKFQH28B65LuVwFzX/WJOmbeqWSOcejsCK5oqsxykxo2RmYvWyLZiwpaWcdvw5ZPKfOB5qH/jC0lI2dGJdIuMJHuhtxehWqd+9i88Kq6e73wxVR8R0gzRk03aHSuHbWwgO/jgkAGrIS2h4s2ZL8rPjpVIC+WHT4okKQ0ZrTL5pFDAdVK+LUQtNHpbvBYcAWAkW1L2Qy3gi4ZJwkLaBrnhYNbG4r4OkQ8JX5m2XXTvN+OqSFlWw=
+    - secure: nJdFb5ytFwP4wT+6w/51GZeKM5yqYTUXEyE25cJR7+wiEHKz5iYKoewNkmZLc0BsJlYnl/q1hxOO3Xh5JdxpAooB9KAbxVS6vrVn1rU3tAqYQvaQTaxx3LLht4s7iRdD/U1vB/436Qc+a0bIUXya8m6sEQV1rKtCo7qqu0inuDnfvliO/ht7/UBLafm9YN8ueVDlBUOun3t2o7j1/nsqYeVXqs2ZWC9YAtAxxGA2CUCPJt6afVQoUqY4xrJwYBFMI5wdqnm/L7J0lCyMKuc1K+N4HGAhi0Y/i/M4gncwusS56XR0gh6Cg4BLLjre6qa5dS7CIiIgq2jxnZJ3q9nB1M+nZ7edMP2kG/v7VLFSP0zdk1LbbSFa1OF+aNqf31jAXZkSN6w3YSIdUgyk8tomYXNKq6dj4X9E03dxjk9ckcLNClzMCyqyOac7M0563gedXHY6xjSic4UeVZn0GiReOs0AkWCZtFmRrLxBgIqUWCdhV2cj0uFoDYX5euElCRlJx5bVyrdDkdGwEgsdc3pZ2Jh5VK+xp8ExtgxrKrTCf1fC2D/6UhSNO5re6mISLD12esBqzex9HzaZeWUgVQo71oeWuzhV57hdvdKkhKAIzOe83ndVk4OSGV4BxesSu/6qy0+GhkCZSXp49HifBOBssaA9msE4BdQeRKJiFdXj9OU=
+    - secure: L1D/EydcJAIcyaiVVzSglSXBN5kwptvh/UeBdjc/K/WTuitTaXLmwkhF0gm76udeQKmtL0KTtCUIVpE+jrVswYUkACJjGQgDAclXRQ+X+LjdiBJBuDSYBd4NC/xEtCH0mMEtPBpfOR0ZXlpfOPy8T++wzXeGv9ogk1bk8I2BaPXKw7R2BMaLK3m+7H75G/hneXndlzQ1qSzlwdnsNGQ8LxuoxAUomgBZSDlKMA8KubJFAVaY8Lxaw9qwWypDXiF08Lk+L9rkS+N9YRgKVkbYJbCDqY5P8ezh+zDmlGsJm91T3/aXFB0wTYabf4aBDpPoy0Yvriy+cL7IZOOqTy2/q59Rsee2aPxjB5UOA4GUM7zg1XecFYok9oix5u6XJk/LbhQJC329DY6hk/nba18dhVHPUSK2uyzbZ3U2/WtC1DBe1RO5TCYjAT56ytQFUIPZi+AVmN2OQb9SJAioCV6zeREzcv6m1yWtaKsvyF5iTMQvMk6EaSGcp54IclbVhSSaLKdWNvS1r0RAnaBBizjXLy97Knfdq2OIhEPOUenUMdll8UPGoLPcnChpZvw8cNm0hNXiDqKwLm8sJVvTQJWx2sNkRA8YIo6QITF5iU1ZPh3xAZPAq6LwGoYs1fd0fhuciHwregaPAXj4o4+mhHtRCwNOIZ4a9l4SzxGOMtqv0KA=
+    - COMMIT=${TRAVIS_COMMIT::8}
+script:
+  - docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder cargo build --release
+after_script:
+  - docker build --tag docker-rust-hello-world:${TRAVIS_JOB_NUMBER} .
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=sebestblog/travis-demo
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO

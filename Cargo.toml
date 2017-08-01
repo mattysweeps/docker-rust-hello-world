@@ -1,0 +1,6 @@
+[package]
+name = "docker-rust-hello-world"
+version = "0.1.0"
+authors = ["Matthew Broomfield <mbroomfield@rapid7.com>"]
+
+[dependencies]
